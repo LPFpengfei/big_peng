@@ -1,0 +1,35 @@
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="margin: 0;">管理员列表</h2>
+    <%= link_to "新建管理员", new_admin_admin_path, class: "btn" %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @admins.each do |admin| %>
+        <tr>
+          <td><%= admin.id %></td>
+          <td><%= admin.name %></td>
+          <td><%= admin.email %></td>
+          <td><%= admin.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          <td>
+            <%= link_to "编辑", edit_admin_admin_path(admin), class: "btn", style: "padding: 4px 8px; font-size: 12px;" %>
+            <%= button_to "删除", admin_admin_path(admin), method: :delete,
+                data: { turbo_confirm: "确定要删除这个管理员吗？" },
+                class: "btn btn-danger",
+                style: "padding: 4px 8px; font-size: 12px; display: inline-block;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
