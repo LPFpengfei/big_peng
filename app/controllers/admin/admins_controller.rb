@@ -5,6 +5,7 @@ class Admin::AdminsController < ApplicationController
 
   def index
     @admins = Admin.order(created_at: :desc).page(params[:page])
+    @admin = Admin.new
   end
 
   def show
@@ -12,26 +13,28 @@ class Admin::AdminsController < ApplicationController
 
   def new
     @admin = Admin.new
+    render :form, layout: false
   end
 
   def create
     @admin = Admin.new(admin_params)
 
     if @admin.save
-      redirect_to admin_admins_path, notice: "管理员创建成功"
+      render json: { success: true, message: "管理员创建成功" }
     else
-      render :new, status: :unprocessable_entity
+      render json: { success: false, errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def edit
+    render :form, layout: false
   end
 
   def update
     if @admin.update(admin_params)
-      redirect_to admin_admins_path, notice: "管理员更新成功"
+      render json: { success: true, message: "管理员更新成功" }
     else
-      render :edit, status: :unprocessable_entity
+      render json: { success: false, errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
