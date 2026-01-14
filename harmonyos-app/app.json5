@@ -1,0 +1,17 @@
+// app.json5
+// HarmonyOS 应用配置文件
+{
+  "app": {
+    "bundleName": "com.example.ebook",
+    "vendor": "example",
+    "versionCode": 1,
+    "versionName": "1.0.0",
+    "icon": "$media:app_icon",
+    "label": "电子书",
+    "description": "鸿蒙电子书应用",
+    "minAPIVersion": 10,
+    "targetAPIVersion": 10,
+    "distributedNotificationEnabled": false,
+    "bundleType": "app"
+  }
+}
