@@ -43,6 +43,9 @@ Rails.application.routes.draw do
       # Reading Progresses routes
       get "reading_progresses/:book_id", to: "reading_progresses#show"
       put "reading_progresses/:book_id", to: "reading_progresses#update"
+
+      # Categories routes
+      resources :categories, only: [ :index, :show ]
     end
   end
 end
