@@ -2,6 +2,7 @@
 # 处理管理员对图书的管理操作
 class Admin::BooksController < ApplicationController
   layout "admin"
+  skip_before_action :verify_authenticity_token
   before_action :require_admin_login
   before_action :set_book, only: [ :show, :edit, :update, :destroy ]
 

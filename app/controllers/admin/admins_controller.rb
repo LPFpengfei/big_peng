@@ -1,5 +1,6 @@
 class Admin::AdminsController < ApplicationController
   layout "admin"
+  skip_before_action :verify_authenticity_token
   before_action :require_admin_login
   before_action :set_admin, only: [ :show, :edit, :update, :destroy ]
 

@@ -1,0 +1,113 @@
+<div class="card">
+  <h2>控制台概览</h2>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+  <!-- 统计卡片 -->
+  <div class="card">
+    <div style="text-align: center;">
+      <div style="font-size: 32px; font-weight: bold; color: #007AFF;"><%= @stats[:total_books] %></div>
+      <div style="margin-top: 8px; color: #666;">总书籍数</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="text-align: center;">
+      <div style="font-size: 32px; font-weight: bold; color: #22C55E;"><%= @stats[:total_users] %></div>
+      <div style="margin-top: 8px; color: #666;">总用户数</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="text-align: center;">
+      <div style="font-size: 32px; font-weight: bold; color: #F59E0B;"><%= @stats[:today_visitors] %></div>
+      <div style="margin-top: 8px; color: #666;">今日访问</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="text-align: center;">
+      <div style="font-size: 32px; font-weight: bold; color: #EF4444;"><%= @stats[:total_admins] %></div>
+      <div style="margin-top: 8px; color: #666;">管理员数</div>
+    </div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
+  <!-- 最近书籍 -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0;">最近添加的书籍</h3>
+        <%= link_to "查看全部", admin_books_path, class: "btn", style: "padding: 4px 8px; font-size: 12px; text-decoration: none;" %>
+      </div>
+
+    <table style="font-size: 14px;">
+      <thead>
+        <tr>
+          <th style="text-align: left; padding: 8px;">书名</th>
+          <th style="text-align: left; padding: 8px;">作者</th>
+          <th style="text-align: left; padding: 8px;">添加时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_books.each do |book| %>
+          <tr>
+            <td style="padding: 8px;"><%= book.title %></td>
+            <td style="padding: 8px;"><%= book.author %></td>
+            <td style="padding: 8px;"><%= book.created_at.strftime("%Y-%m-%d") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 最近用户 -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0;">最近注册的用户</h3>
+        <%= link_to "查看全部", admin_users_path, class: "btn", style: "padding: 4px 8px; font-size: 12px; text-decoration: none;" %>
+      </div>
+
+    <table style="font-size: 14px;">
+      <thead>
+        <tr>
+          <th style="text-align: left; padding: 8px;">昵称</th>
+          <th style="text-align: left; padding: 8px;">邮箱</th>
+          <th style="text-align: left; padding: 8px;">注册时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_users.each do |user| %>
+          <tr>
+            <td style="padding: 8px;"><%= user.nickname %></td>
+            <td style="padding: 8px;"><%= user.email %></td>
+            <td style="padding: 8px;"><%= user.created_at.strftime("%Y-%m-%d") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 系统信息 -->
+<div class="card" style="margin-top: 24px;">
+  <h3>系统信息</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px;">
+    <div>
+      <div style="color: #666; font-size: 14px;">系统版本</div>
+      <div style="margin-top: 4px; font-weight: 600;">Rails 8.0.4</div>
+    </div>
+    <div>
+      <div style="color: #666; font-size: 14px;">Ruby版本</div>
+      <div style="margin-top: 4px; font-weight: 600;"><%= RUBY_VERSION %></div>
+    </div>
+    <div>
+      <div style="color: #666; font-size: 14px;">数据库类型</div>
+      <div style="margin-top: 4px; font-weight: 600;">PostgreSQL</div>
+    </div>
+    <div>
+      <div style="color: #666; font-size: 14px;">当前时间</div>
+      <div style="margin-top: 4px; font-weight: 600;"><%= Time.current.strftime("%Y-%m-%d %H:%M:%S") %></div>
+    </div>
+  </div>
+</div>

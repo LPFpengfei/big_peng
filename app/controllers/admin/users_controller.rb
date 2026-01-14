@@ -2,6 +2,7 @@
 # 处理管理员对用户的管理操作
 class Admin::UsersController < ApplicationController
   layout "admin"
+  skip_before_action :verify_authenticity_token
   before_action :require_admin_login
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 

@@ -7,11 +7,12 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy"
 
+    resources :dashboard, only: [ :index ]
     resources :admins
     resources :books
     resources :users
 
-    root to: "admins#index"
+    root to: "dashboard#index"
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

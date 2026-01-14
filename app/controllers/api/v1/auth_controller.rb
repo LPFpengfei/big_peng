@@ -4,7 +4,7 @@ class Api::V1::AuthController < Api::V1::BaseController
   # 跳过CSRF保护
   skip_before_action :verify_authenticity_token
   # 不需要认证的动作
-  skip_before_action :authenticate_user!, only: [:login, :register]
+  skip_before_action :authenticate_user!, only: [ :login, :register ]
 
   # 用户登录
   # POST /api/v1/auth/login

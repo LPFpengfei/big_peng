@@ -1,109 +1,170 @@
-<%# 管理端用户列表页面 %>
+<style>
+  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); }
+  .modal.show { display: flex; align-items: center; justify-content: center; }
+  .modal-content { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; }
+  .modal-header h3 { margin: 0; font-size: 20px; color: #1f2937; }
+  .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; }
+  .modal-close:hover { color: #1f2937; }
+  .modal-footer { margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+  .btn-secondary { background: #e5e7eb; color: #1f2937; }
+  .btn-secondary:hover { background: #d1d5db; }
+</style>
+
 <% content_for :title, "用户管理" %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">用户管理</h1>
-
-  <!-- 新增用户按钮 -->
-  <div class="mb-4">
-    <button id="new-user-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-      新增用户
-    </button>
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="margin: 0;">用户管理</h2>
+    <button class="btn" onclick="openModal('new')">新增用户</button>
   </div>
 
-  <!-- 用户列表 -->
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-white border border-gray-200">
-      <thead>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>邮箱</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
         <tr>
-          <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-          <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">昵称</th>
-          <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">邮箱</th>
-          <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
-          <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+          <td><%= user.id %></td>
+          <td><%= user.nickname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+          <td>
+            <button class="btn" style="padding: 4px 8px; font-size: 12px; cursor: pointer; margin-right: 4px;" onclick="location.href='<%= admin_user_path(user) %>'">查看</button>
+            <button class="btn" style="padding: 4px 8px; font-size: 12px; cursor: pointer; margin-right: 4px;" onclick="openModal('edit', <%= user.id %>)">编辑</button>
+            <%= button_to "删除", admin_user_path(user), method: :delete,
+                data: { turbo_confirm: "确定要删除这个用户吗？" },
+                class: "btn btn-danger",
+                style: "padding: 4px 8px; font-size: 12px; display: inline-block; margin-right: 4px;" %>
+          </td>
         </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        <% @users.each do |user| %>
-          <tr>
-            <td class="py-3 px-4"><%= user.id %></td>
-            <td class="py-3 px-4"><%= user.nickname %></td>
-            <td class="py-3 px-4"><%= user.email %></td>
-            <td class="py-3 px-4"><%= user.created_at.strftime('%Y-%m-%d %H:%M') %></td>
-            <td class="py-3 px-4">
-              <%= link_to "查看", admin_user_path(user), class: "text-blue-500 hover:text-blue-700 mr-2" %>
-              <button class="edit-user-btn text-yellow-500 hover:text-yellow-700 mr-2" data-id="<%= user.id %>">
-                编辑
-              </button>
-              <%= link_to "删除", admin_user_path(user), method: :delete, data: { confirm: "确定要删除这个用户吗？" }, class: "text-red-500 hover:text-red-700" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- 分页 -->
-  <div class="mt-4">
-    <%= paginate @users %>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
-<!-- 新增/编辑用户模态框 -->
-<div id="user-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-  <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-    <!-- 模态框标题 -->
-    <div class="flex justify-between items-center mb-4">
-      <h3 id="modal-title" class="text-lg font-medium text-gray-900">新增用户</h3>
-      <button id="close-modal" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+<div style="margin-top: 16px;">
+  <%= paginate @users %>
+  <span style="margin-left: 8px; color: #555;">当前页：<%= (@users.respond_to?(:current_page) ? @users.current_page : 1) %></span>
+  <% if @users.respond_to?(:total_pages) %>
+    <span style="margin-left: 8px; color: #555;">总页数：<%= @users.total_pages %></span>
+  <% end %>
+</div>
+
+<!-- 模态框 -->
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">新增用户</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
-    <!-- 模态框内容 -->
-    <div id="modal-content">
-      <!-- 表单内容将通过AJAX加载 -->
-    </div>
+    <div id="modalBody"></div>
   </div>
 </div>
 
 <script>
-  // 新增用户按钮点击事件
-  document.getElementById('new-user-btn').addEventListener('click', function() {
-    fetch('<%= new_admin_user_path(format: :html) %>')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('modal-title').textContent = '新增用户';
-        document.getElementById('modal-content').innerHTML = html;
-        document.getElementById('user-modal').classList.remove('hidden');
-      });
-  });
+  async function openModal(action, id = null) {
+    const modal = document.getElementById('userModal');
+    const modalBody = document.getElementById('modalBody');
+    const modalTitle = document.getElementById('modalTitle');
 
-  // 编辑用户按钮点击事件
-  document.querySelectorAll('.edit-user-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const userId = this.dataset.id;
-      fetch(`<%= admin_users_path %>/${userId}/edit`)
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('modal-title').textContent = '编辑用户';
-          document.getElementById('modal-content').innerHTML = html;
-          document.getElementById('user-modal').classList.remove('hidden');
+    try {
+      let url = action === 'new' ? '<%= new_admin_user_path %>' : `<%= edit_admin_user_path(':id') %>`.replace(':id', id);
+      const response = await fetch(url);
+      const html = await response.text();
+
+      modalBody.innerHTML = html;
+      modalTitle.textContent = action === 'new' ? '新增用户' : '编辑用户';
+      modal.classList.add('show');
+
+      // 绑定表单提交事件
+      const form = modalBody.querySelector('form');
+      if (form) {
+        console.log('Form Action:', form.action);
+        console.log('Form Method:', form.method);
+
+        // 调试：查看表单的CSRF令牌字段
+        const csrfTokenField = form.querySelector('input[name="authenticity_token"]');
+        console.log('CSRF Token Field:', csrfTokenField ? 'Found' : 'Not found');
+        if (csrfTokenField) {
+          console.log('CSRF Token Value:', csrfTokenField.value);
+        }
+
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          submitForm(form, action, id);
         });
-    });
-  });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('加载表单失败');
+    }
+  }
 
-  // 关闭模态框
-  document.getElementById('close-modal').addEventListener('click', function() {
-    document.getElementById('user-modal').classList.add('hidden');
-  });
+  function closeModal() {
+    const modal = document.getElementById('userModal');
+    modal.classList.remove('show');
+  }
 
-  // 点击模态框外部关闭
-  window.addEventListener('click', function(event) {
-    const modal = document.getElementById('user-modal');
-    if (event.target === modal) {
-      modal.classList.add('hidden');
+  async function submitForm(form, action, id = null) {
+    try {
+      // 调试：查看表单数据
+      const formData = new FormData(form);
+      console.log('Form Data:');
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
+
+      const url = action === 'new' ? '<%= admin_users_path %>' : `<%= admin_user_path(':id') %>`.replace(':id', id);
+      const method = action === 'new' ? 'POST' : 'PATCH';
+
+      console.log('Request URL:', url);
+      console.log('Request Method:', method);
+
+      const response = await fetch(url, {
+        method: method,
+        body: formData,
+        credentials: 'include',
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
+      });
+
+      console.log('Response Status:', response.status);
+      const responseText = await response.text();
+      console.log('Response Text:', responseText);
+
+      // 尝试解析JSON响应
+      const data = JSON.parse(responseText);
+      console.log('Parsed Response:', data);
+
+      if (data.success) {
+        alert(data.message);
+        closeModal();
+        location.reload();
+      } else {
+        const errors = data.errors.join('\n');
+        alert('错误:\n' + errors);
+      }
+    } catch (error) {
+      console.error('Error in submitForm:', error);
+      alert('提交失败: ' + error.message);
+    }
+  }
+
+  // 点击模态框背景关闭
+  document.getElementById('userModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
     }
   });
 </script>

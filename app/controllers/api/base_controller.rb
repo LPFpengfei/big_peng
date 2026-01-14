@@ -5,18 +5,18 @@ class Api::BaseController < ApplicationController
   protected
 
   def authenticate_user!
-    token = request.headers['Authorization']&.split(' ')&.last
+    token = request.headers["Authorization"]&.split(" ")&.last
     payload = JwtService.decode(token)
 
     unless payload
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
       return false
     end
 
-    @current_user = User.find_by(id: payload['user_id'])
+    @current_user = User.find_by(id: payload["user_id"])
 
     unless @current_user
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
       return false
     end
 

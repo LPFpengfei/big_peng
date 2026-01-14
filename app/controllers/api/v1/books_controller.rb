@@ -2,7 +2,7 @@
 # 处理书籍相关的API请求
 class Api::V1::BooksController < Api::V1::BaseController
   # 不需要认证的动作
-  skip_before_action :authenticate_user!, only: [:index, :show]
+  skip_before_action :authenticate_user!, only: [ :index, :show ]
 
   # 获取书籍列表
   # GET /api/v1/books
