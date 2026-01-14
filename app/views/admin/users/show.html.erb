@@ -1,0 +1,127 @@
+<%# 管理端用户详情页面 %>
+<% content_for :title, "用户详情" %>
+
+<div class="container mx-auto px-4 py-8">
+  <!-- 返回按钮 -->
+  <div class="mb-6">
+    <%= link_to "返回用户列表", admin_users_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <!-- 用户基本信息 -->
+  <div class="bg-white p-6 rounded-lg shadow mb-8">
+    <h1 class="text-2xl font-bold mb-4">用户详情</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-gray-600">ID: <%= @user.id %></p>
+      </div>
+      <div>
+        <p class="text-gray-600">昵称: <%= @user.nickname %></p>
+      </div>
+      <div>
+        <p class="text-gray-600">邮箱: <%= @user.email %></p>
+      </div>
+      <div>
+        <p class="text-gray-600">创建时间: <%= @user.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      </div>
+      <div>
+        <p class="text-gray-600">更新时间: <%= @user.updated_at.strftime('%Y-%m-%d %H:%M') %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户书架 -->
+  <div class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-xl font-bold mb-4">用户书架</h2>
+    
+    <% if @bookshelves.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">书籍标题</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作者</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">添加时间</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @bookshelves.each do |bookshelf| %>
+              <tr>
+                <td class="py-3 px-4"><%= bookshelf.book.title %></td>
+                <td class="py-3 px-4"><%= bookshelf.book.author %></td>
+                <td class="py-3 px-4"><%= bookshelf.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500">该用户还没有添加任何书籍到书架</p>
+    <% end %>
+  </div>
+
+  <!-- 用户书签 -->
+  <div class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-xl font-bold mb-4">用户书签</h2>
+    
+    <% if @bookmarks.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">书籍标题</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">章节</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">页码</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @bookmarks.each do |bookmark| %>
+              <tr>
+                <td class="py-3 px-4"><%= bookmark.book.title %></td>
+                <td class="py-3 px-4"><%= bookmark.chapter %></td>
+                <td class="py-3 px-4"><%= bookmark.page %></td>
+                <td class="py-3 px-4"><%= bookmark.note || '-' %></td>
+                <td class="py-3 px-4"><%= bookmark.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500">该用户还没有添加任何书签</p>
+    <% end %>
+  </div>
+
+  <!-- 用户阅读进度 -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-xl font-bold mb-4">用户阅读进度</h2>
+    
+    <% if @reading_progresses.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">书籍标题</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">章节</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">页码</th>
+              <th class="py-3 px-4 bg-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">更新时间</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @reading_progresses.each do |progress| %>
+              <tr>
+                <td class="py-3 px-4"><%= progress.book.title %></td>
+                <td class="py-3 px-4"><%= progress.chapter %></td>
+                <td class="py-3 px-4"><%= progress.page %></td>
+                <td class="py-3 px-4"><%= progress.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500">该用户还没有任何阅读进度记录</p>
+    <% end %>
+  </div>
+</div>

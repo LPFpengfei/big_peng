@@ -1,0 +1,78 @@
+<%# 管理端用户表单页面 %> 
+<%= form_for([:admin, @user], html: { class: "space-y-4" }) do |f| %>
+  <!-- 昵称 -->
+  <div class="form-group">
+    <%= f.label :nickname, "昵称", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.text_field :nickname, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= f.error_message_on :nickname, class: "text-red-500 text-sm mt-1" %>
+  </div>
+
+  <!-- 邮箱 -->
+  <div class="form-group">
+    <%= f.label :email, "邮箱", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.email_field :email, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= f.error_message_on :email, class: "text-red-500 text-sm mt-1" %>
+  </div>
+
+  <!-- 密码 -->
+  <div class="form-group">
+    <%= f.label :password, @user.new_record? ? "密码" : "新密码（可选）", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.password_field :password, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= f.error_message_on :password, class: "text-red-500 text-sm mt-1" %>
+  </div>
+
+  <!-- 确认密码 -->
+  <div class="form-group">
+    <%= f.label :password_confirmation, @user.new_record? ? "确认密码" : "确认新密码（可选）", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.password_field :password_confirmation, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= f.error_message_on :password_confirmation, class: "text-red-500 text-sm mt-1" %>
+  </div>
+
+  <!-- 提交按钮 -->
+  <div class="form-group flex justify-end">
+    <button type="button" id="cancel-btn" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+      取消
+    </button>
+    <%= f.submit class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+<% end %>
+
+<script>
+  // 取消按钮点击事件
+  document.getElementById('cancel-btn').addEventListener('click', function() {
+    document.getElementById('user-modal').classList.add('hidden');
+  });
+
+  // 表单提交处理
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    
+    fetch(form.action, {
+      method: form.method,
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // 关闭模态框
+        document.getElementById('user-modal').classList.add('hidden');
+        // 刷新页面
+        window.location.reload();
+      } else {
+        // 显示错误信息
+        alert('操作失败: ' + data.errors.join(', '));
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('操作失败，请重试');
+    });
+  });
+</script>
