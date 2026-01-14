@@ -21,6 +21,12 @@ gem "jbuilder"
 # Pagination for ActiveRecord relations
 gem "kaminari"
 
+# CORS support for API requests
+gem "rack-cors"
+
+# JWT authentication for API requests
+gem "jwt"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 

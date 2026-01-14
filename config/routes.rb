@@ -22,4 +22,27 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # API routes
+  namespace :api do
+    namespace :v1 do
+      # Authentication routes
+      post "auth/login", to: "auth#login"
+      post "auth/register", to: "auth#register"
+      delete "auth/logout", to: "auth#logout"
+
+      # Books routes
+      resources :books, only: [ :index, :show, :create, :update, :destroy ]
+
+      # Bookshelves routes
+      resources :bookshelves, only: [ :index, :create, :destroy ]
+
+      # Bookmarks routes
+      resources :bookmarks, only: [ :index, :create, :update, :destroy ]
+
+      # Reading Progresses routes
+      get "reading_progresses/:book_id", to: "reading_progresses#show"
+      put "reading_progresses/:book_id", to: "reading_progresses#update"
+    end
+  end
 end
