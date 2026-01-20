@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Peng Book - H5版</title>
+    <link rel="stylesheet" href="app.wxss">
+    <style>
+        /* 补充H5特定样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .search-box {
+            display: flex;
+            margin: 20rpx 0;
+            gap: 10rpx;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10rpx;
+            border: 1rpx solid #ddd;
+            border-radius: 8rpx;
+            font-size: 28rpx;
+        }
+
+        /* 简化的按钮样式 */
+        button {
+            padding: 10rpx 20rpx;
+            border: none;
+            border-radius: 8rpx;
+            font-size: 28rpx;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #1aad19;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            color: #1aad19;
+            border: 1rpx solid #1aad19;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background-color: #fff;
+            padding: 20rpx;
+            box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .nav-bar .title {
+            font-size: 36rpx;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+        }
+
+        /* 底部导航 */
+        .tab-bar {
+            display: flex;
+            background-color: #fff;
+            padding: 10rpx 0;
+            box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .tab-bar-item {
+            flex: 1;
+            text-align: center;
+            padding: 10rpx;
+            cursor: pointer;
+        }
+
+        .tab-bar-item.active {
+            color: #1aad19;
+        }
+
+        /* 主内容区域 */
+        .container {
+            padding: 100rpx 20rpx 120rpx;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <span class="title" id="navTitle">Big Peng Book</span>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="container">
+        <!-- 首页 -->
+        <div id="indexPage" class="page active">
+            <div class="header">
+                <text class="title">欢迎使用 Big Peng Book</text>
+                <text class="subtitle">发现精彩图书，享受阅读时光</text>
+            </div>
+
+            <div class="books-section">
+                <div class="section-title">热门推荐</div>
+                <div class="books-scroll" id="indexBooks"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="goToBookshelf()">进入书架</button>
+                <button class="btn-secondary" onclick="goToDiscover()">探索更多</button>
+            </div>
+        </div>
+
+        <!-- 书架页 -->
+        <div id="bookshelfPage" class="page">
+            <!-- 书架分类标签 -->
+            <div class="bookshelf-tabs">
+                <div class="tab-item active" onclick="switchTab('全部')">全部</div>
+                <div class="tab-item" onclick="switchTab('最近阅读')">最近阅读</div>
+                <div class="tab-item" onclick="switchTab('小说')">小说</div>
+                <div class="tab-item" onclick="switchTab('文学')">文学</div>
+                <div class="tab-item" onclick="switchTab('科技')">科技</div>
+                <div class="tab-item" onclick="switchTab('历史')">历史</div>
+            </div>
+
+            <!-- 搜索栏 -->
+            <div class="search-container">
+                <div class="search-box">
+                    <img class="search-icon" src="src/assets/icons/search.svg" alt="搜索" />
+                    <input class="search-input" placeholder="搜索图书" />
+                </div>
+            </div>
+
+            <!-- 书架网格 -->
+            <div class="bookshelf-grid" id="bookshelfBooks"></div>
+
+            <!-- 空书架提示 -->
+            <div class="empty-tip" id="emptyBookshelf" style="display: none;">
+                <text>书架还是空的，去发现页添加一些图书吧</text>
+                <button class="add-books-btn" onclick="goToDiscover()">添加书籍</button>
+            </div>
+        </div>
+
+        <!-- 发现页 -->
+        <div id="discoverPage" class="page">
+            <!-- 搜索栏 -->
+            <div class="search-container">
+                <div class="search-box">
+                    <img class="search-icon" src="src/assets/icons/search.svg" alt="搜索" />
+                    <input class="search-input" placeholder="搜索图书" id="searchInput" oninput="onSearchInput(event)"
+                        onkeypress="onSearchKeyPress(event)" />
+                </div>
+            </div>
+
+            <!-- 轮播图 -->
+            <div class="banner">
+                <img class="banner-image" src="https://via.placeholder.com/750x200/1aad19/ffffff?text=新书推荐"
+                    alt="新书推荐" />
+            </div>
+
+            <style>
+                /* 轮播图样式 */
+                .banner {
+                    width: 100%;
+                    margin: 10px 0;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+
+                .banner img {
+                    width: 100%;
+                    height: auto;
+                }
+
+                /* 主容器样式 */
+                .container {
+                    padding: 70px 15px 70px;
+                    min-height: 100vh;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }
+
+                /* 导航栏样式 */
+                .nav-bar {
+                    padding: 15px;
+                }
+
+                /* 底部导航样式 */
+                .tab-bar {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                    padding: 10px 0;
+                }
+
+                .tab-bar-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    font-size: 14px;
+                    color: #666;
+                }
+
+                .tab-bar-item.active {
+                    color: #1aad19;
+                }
+
+                /* 首页热门推荐图书滚动样式 */
+                #indexBooks {
+                    display: flex;
+                    gap: 15px;
+                    overflow-x: auto;
+                    padding: 10px 0;
+                }
+
+                #indexBooks .book-item {
+                    flex: 0 0 auto;
+                    width: 120px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                #indexBooks .book-item .book-cover {
+                    width: 120px;
+                    height: 160px;
+                }
+            </style>
+
+            <!-- 分类导航 -->
+            <div class="category-nav">
+                <div class="category-item" onclick="goToCategory('小说')">
+                    <div class="category-icon">
+                        <img src="src/assets/icons/novel.svg" alt="小说" style="width: 40rpx; height: 40rpx;" />
+                    </div>
+                    <span class="category-name">小说</span>
+                </div>
+                <div class="category-item" onclick="goToCategory('文学')">
+                    <div class="category-icon">
+                        <img src="src/assets/icons/literature.svg" alt="文学" style="width: 40rpx; height: 40rpx;" />
+                    </div>
+                    <span class="category-name">文学</span>
+                </div>
+                <div class="category-item" onclick="goToCategory('科技')">
+                    <div class="category-icon">
+                        <img src="src/assets/icons/science.svg" alt="科技" style="width: 40rpx; height: 40rpx;" />
+                    </div>
+                    <span class="category-name">科技</span>
+                </div>
+                <div class="category-item" onclick="goToCategory('历史')">
+                    <div class="category-icon">
+                        <img src="src/assets/icons/history.svg" alt="历史" style="width: 40rpx; height: 40rpx;" />
+                    </div>
+                    <span class="category-name">历史</span>
+                </div>
+                <div class="category-item" onclick="goToCategory('经管')">
+                    <div class="category-icon">
+                        <img src="src/assets/icons/business.svg" alt="经管" style="width: 40rpx; height: 40rpx;" />
+                    </div>
+                    <span class="category-name">经管</span>
+                </div>
+            </div>
+
+            <!-- 热门推荐 -->
+            <div class="books-section">
+                <div class="section-header">
+                    <div class="section-title">热门推荐<span class="section-more">查看全部</span></div>
+                </div>
+                <div class="book-list" id="hotBooks"></div>
+            </div>
+
+            <!-- 新书上架 -->
+            <div class="books-section">
+                <div class="section-header">
+                    <div class="section-title">新书上架<span class="section-more">查看全部</span></div>
+                </div>
+                <div class="book-list" id="newBooks"></div>
+            </div>
+        </div>
+
+        <!-- 阅读器页 -->
+        <div id="readerPage" class="page">
+            <div class="reader-container">
+                <div class="reader-header">
+                    <text class="reader-title" id="readerTitle"></text>
+                    <text class="reader-author" id="readerAuthor"></text>
+                </div>
+
+                <div class="reader-content" id="readerContent"></div>
+
+                <div class="reader-footer">
+                    <button onclick="prevChapter()" type="default" size="mini">上一章</button>
+                    <button onclick="nextChapter()" type="default" size="mini">下一章</button>
+                    <button id="bookshelfBtn" type="primary" size="mini"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+        <div class="tab-bar-item active" onclick="switchPage('indexPage', '首页')">
+            <div>首页</div>
+        </div>
+        <div class="tab-bar-item" onclick="switchPage('bookshelfPage', '我的书架')">
+            <div>书架</div>
+        </div>
+        <div class="tab-bar-item" onclick="switchPage('discoverPage', '发现')">
+            <div>发现</div>
+        </div>
+    </div>
+
+    <!-- JavaScript入口 -->
+    <script src="h5.js"></script>
+</body>
+
+</html>

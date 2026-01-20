@@ -1,0 +1,45 @@
+<!-- src/pages/Reader/index.wxml -->
+<view class="reader-container">
+  <!-- 书籍信息 -->
+  <view class="reader-header">
+    <text class="reader-title">{{book.title}}</text>
+    <text class="reader-author">{{book.author}}</text>
+    <view class="reader-stats">
+      <text>{{book.wordCount || 0}}字</text>
+      <text>{{book.readingTime || 0}}分钟阅读</text>
+    </view>
+  </view>
+
+  <!-- 阅读进度条 -->
+  <view class="reading-progress">
+    <view class="progress-bar" style="width: {{book.progress || 0}}%"></view>
+  </view>
+
+  <!-- 书籍内容 -->
+  <view class="reader-content">
+    {{book.content}}
+  </view>
+
+  <!-- 章节切换按钮 -->
+  <view class="chapter-nav">
+    <button class="chapter-nav-btn" bindtap="prevChapter">‹</button>
+    <button class="chapter-nav-btn" bindtap="nextChapter">›</button>
+  </view>
+
+  <!-- 底部工具栏 -->
+  <view class="reader-footer">
+    <button class="reader-btn" bindtap="showChapters">目录</button>
+    <button class="reader-btn" bindtap="showSettings">设置</button>
+    <button class="reader-btn" bindtap="prevChapter">上一章</button>
+    <button class="reader-btn" bindtap="nextChapter">下一章</button>
+    <button class="reader-btn" wx:if="{{!inBookshelf}}" bindtap="addToBookshelf">加入书架</button>
+    <button class="reader-btn warn" wx:else bindtap="removeFromBookshelf">移出书架</button>
+  </view>
+
+  <!-- 点击区域 -->
+  <view class="tap-areas">
+    <view class="tap-area-left" bindtap="prevChapter"></view>
+    <view class="tap-area-center" bindtap="toggleToolbar"></view>
+    <view class="tap-area-right" bindtap="nextChapter"></view>
+  </view>
+</view>

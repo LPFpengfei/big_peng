@@ -1,0 +1,22 @@
+<!-- src/pages/Index/index.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">欢迎使用 Big Peng Book</text>
+    <text class="subtitle">发现精彩图书，享受阅读时光</text>
+  </view>
+  
+  <view class="books-section">
+    <view class="section-title">热门推荐</view>
+    <scroll-view class="books-scroll" scroll-x>
+      <view class="book-item" wx:for="{{books}}" wx:key="id" bindtap="goToReader" data-id="{{item.id}}">
+        <image class="book-cover" src="{{item.cover_url}}" mode="aspectFit"></image>
+        <text class="book-title">{{item.title}}</text>
+      </view>
+    </scroll-view>
+  </view>
+  
+  <view class="action-buttons">
+    <button class="btn-primary" bindtap="goToBookshelf">进入书架</button>
+    <button class="btn-secondary" bindtap="goToDiscover">探索更多</button>
+  </view>
+</view>

@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "src/pages/Index/index",
+    "src/pages/Bookshelf/index",
+    "src/pages/Discover/index",
+    "src/pages/Reader/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Big Peng Book",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#1aad19",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "src/pages/Index/index",
+        "text": "首页",
+        "iconPath": "src/assets/icons/home.png",
+        "selectedIconPath": "src/assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "src/pages/Bookshelf/index",
+        "text": "书架",
+        "iconPath": "src/assets/icons/bookshelf.png",
+        "selectedIconPath": "src/assets/icons/bookshelf-active.png"
+      },
+      {
+        "pagePath": "src/pages/Discover/index",
+        "text": "发现",
+        "iconPath": "src/assets/icons/discover.png",
+        "selectedIconPath": "src/assets/icons/discover-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

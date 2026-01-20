@@ -1,0 +1,95 @@
+<!-- src/pages/Discover/index.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-container">
+    <view class="search-box">
+      <image class="search-icon" src="/src/assets/icons/search.png"></image>
+      <input class="search-input" placeholder="搜索图书" bindinput="onSearchInput" bindconfirm="onSearch" />
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <view class="banner">
+    <swiper autoplay indicator-dots circular>
+      <swiper-item>
+        <image class="banner-image" src="https://via.placeholder.com/750x200/1aad19/ffffff?text=新书推荐" mode="aspectFill"></image>
+      </swiper-item>
+      <swiper-item>
+        <image class="banner-image" src="https://via.placeholder.com/750x200/1890ff/ffffff?text=热门排行" mode="aspectFill"></image>
+      </swiper-item>
+      <swiper-item>
+        <image class="banner-image" src="https://via.placeholder.com/750x200/ff7875/ffffff?text=限时免费" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 分类导航 -->
+  <view class="category-nav">
+    <view class="category-item">
+      <view class="category-icon">
+        <image src="/src/assets/icons/novel.png" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <text class="category-name">小说</text>
+    </view>
+    <view class="category-item">
+      <view class="category-icon">
+        <image src="/src/assets/icons/literature.png" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <text class="category-name">文学</text>
+    </view>
+    <view class="category-item">
+      <view class="category-icon">
+        <image src="/src/assets/icons/science.png" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <text class="category-name">科技</text>
+    </view>
+    <view class="category-item">
+      <view class="category-icon">
+        <image src="/src/assets/icons/history.png" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <text class="category-name">历史</text>
+    </view>
+    <view class="category-item">
+      <view class="category-icon">
+        <image src="/src/assets/icons/business.png" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <text class="category-name">经管</text>
+    </view>
+  </view>
+
+  <!-- 热门推荐 -->
+  <view class="books-section">
+    <view class="section-header">
+      <view class="section-title">热门推荐<text class="section-more">查看全部</text></view>
+    </view>
+    <view class="book-list">
+      <view class="book-item" wx:for="{{hotBooks}}" wx:key="id" bindtap="goToReader" data-id="{{item.id}}">
+        <image class="book-cover" src="{{item.cover_url}}" mode="aspectFill"></image>
+        <view class="book-info">
+          <text class="book-title">{{item.title}}</text>
+          <text class="book-author">{{item.author}}</text>
+          <text class="book-desc">{{item.description}}</text>
+        </view>
+        <button class="add-btn" bindtap="addToBookshelf" data-book="{{item}}" catchtap>添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新书上架 -->
+  <view class="books-section">
+    <view class="section-header">
+      <view class="section-title">新书上架<text class="section-more">查看全部</text></view>
+    </view>
+    <view class="book-list">
+      <view class="book-item" wx:for="{{newBooks}}" wx:key="id" bindtap="goToReader" data-id="{{item.id}}">
+        <image class="book-cover" src="{{item.cover_url}}" mode="aspectFill"></image>
+        <view class="book-info">
+          <text class="book-title">{{item.title}}</text>
+          <text class="book-author">{{item.author}}</text>
+          <text class="book-desc">{{item.description}}</text>
+        </view>
+        <button class="add-btn" bindtap="addToBookshelf" data-book="{{item}}" catchtap>添加</button>
+      </view>
+    </view>
+  </view>
+</view>

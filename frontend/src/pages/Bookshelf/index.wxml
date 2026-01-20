@@ -1,0 +1,40 @@
+<!-- src/pages/Bookshelf/index.wxml -->
+<view class="container">
+  <!-- 书架分类标签 -->
+  <view class="bookshelf-tabs">
+    <view class="tab-item active">全部</view>
+    <view class="tab-item">最近阅读</view>
+    <view class="tab-item">小说</view>
+    <view class="tab-item">文学</view>
+    <view class="tab-item">科技</view>
+    <view class="tab-item">历史</view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-container">
+    <view class="search-box">
+      <image class="search-icon" src="/src/assets/icons/search.png"></image>
+      <input class="search-input" placeholder="搜索图书" />
+    </view>
+  </view>
+
+  <!-- 书架网格 -->
+  <view class="bookshelf-grid">
+    <view class="bookshelf-item" wx:for="{{books}}" wx:key="id" bindtap="goToReader" data-id="{{item.id}}">
+      <image class="bookshelf-cover" src="{{item.cover_url}}" mode="aspectFill"></image>
+      <view class="bookshelf-info">
+        <text class="bookshelf-title">{{item.title}}</text>
+        <text class="bookshelf-author">{{item.author}}</text>
+        <view class="reading-progress">
+          <view class="progress-bar" style="width: {{item.progress || 0}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空书架提示 -->
+  <view class="empty-tip" wx:if="{{books.length === 0}}">
+    <text>书架还是空的，去发现页添加一些图书吧</text>
+    <button class="add-books-btn" bindtap="goToDiscover">添加书籍</button>
+  </view>
+</view>
